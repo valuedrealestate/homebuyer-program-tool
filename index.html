@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maryland Homebuyer Program Finder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    h2 {
+      color: #333;
+      text-align: center;
+    }
+    form {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    .result {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #e6ffe6;
+      border: 1px solid #b2d8b2;
+      border-radius: 8px;
+    }
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      form, .result {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>Find Your Ideal Homebuyer Program in Maryland</h2>
+  <form id="programForm">
+    <label>Where is the home located?
+      <select id="location">
+        <option value="">Select...</option>
+        <option value="college_park">College Park</option>
+        <option value="laurel">Laurel</option>
+        <option value="pg_county">Prince George's County (not College Park)</option>
+        <option value="other_md">Other Maryland</option>
+      </select>
+    </label>
+
+    <label>Are you a first-time homebuyer?
+      <select id="firstTime">
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+    </label>
+
+    <label>Are you a teacher or school employee?
+      <select id="teacher">
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+    </label>
+
+    <label>Are you a police officer or sheriff?
+      <select id="police">
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+    </label>
+
+    <label>Are you military (active duty, reserve, or veteran)?
+      <select id="military">
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+    </label>
+
+    <label>Do you or a dependent have a disability?
+      <select id="disability">
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+    </label>
+
+    <label>Is the home a foreclosure in Laurel?
+      <select id="foreclosure">
+        <option value="">Select...</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+    </label>
+
+    <button type="button" onclick="showPrograms()">Find My Programs</button>
+  </form>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    function showPrograms() {
+      const loc = document.getElementById('location').value;
+      const first = document.getElementById('firstTime').value;
+      const teacher = document.getElementById('teacher').value;
+      const police = document.getElementById('police').value;
+      const military = document.getElementById('military').value;
+      const disability = document.getElementById('disability').value;
+      const foreclosure = document.getElementById('foreclosure').value;
+
+      let programs = [];
+
+      if (loc === "college_park") {
+        programs.push("College Park New Neighbors Grant (up to $15K–$20K)");
+      } else if (loc === "laurel") {
+        if (foreclosure === "yes") {
+          programs.push("Laurel Foreclosed Home Tax Credit");
+        }
+      } else if (loc === "pg_county") {
+        if (first === "yes") programs.push("Pathway to Purchase Program (up to $25K)");
+        programs.push("Prince George's County Purchase Assistance Program (PGCPAP, up to $15K)");
+        if (police === "yes") programs.push("Police & Sheriff Incentive");
+      } else if (loc === "other_md") {
+        if (first === "yes") programs.push("MMP 1st-Time Advantage (up to $6K)");
+        else programs.push("MMP Flex 5000 (up to $5K)");
+      }
+
+      if (teacher === "yes") programs.push("Teacher Next Door Grant (up to $8K + DPA)");
+      if (military === "yes") programs.push("Maryland Homefront (0.25% interest rate reduction)");
+      if (disability === "yes") programs.push("HomeAbility Program (up to $45K assistance)");
+
+      document.getElementById('result').innerHTML =
+        programs.length > 0
+          ? `<strong>Recommended Programs:</strong><ul><li>${programs.join('</li><li>')}</li></ul>`
+          : 'No matching programs found. Please review your inputs.';
+    }
+  </script>
+</body>
+</html>
