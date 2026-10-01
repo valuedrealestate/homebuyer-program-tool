@@ -169,7 +169,8 @@
   const CONTACT_EMAIL = "audrey@valuedrealestate.com";
   const CONTACT_TEXT = "+13012881241";
   // Optional: paste a Google Form link to collect Funding Map requests in a sheet; leave "" to use email.
-  const FUNDING_MAP_FORM_URL = "";
+  const FUNDING_MAP_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdm_8OYXkz72ORmoAuiMDtymudLTrmyYsajxksuoX5EEMMTkQ/viewform?usp=pp_url";
+  const QUIZ_ANSWERS_FIELD = "entry.1716118828";
 
   document.getElementById("checked").textContent = LAST_CHECKED;
 
@@ -285,7 +286,19 @@
   }
 
   function fundingMapLink(a, programs){
-    if (FUNDING_MAP_FORM_URL) return FUNDING_MAP_FORM_URL;
+    if (FUNDING_MAP_FORM_URL) {
+      const summary = [
+        "Area: " + LABELS.location[a.location],
+        "First-time buyer: " + (a.firstTime === "yes" ? "Yes" : "No"),
+        "Work: " + LABELS.occupation[a.occupation],
+        "Military/veteran: " + (a.military === "yes" ? "Yes" : "No"),
+        "Household disability: " + (a.disability === "yes" ? "Yes" : "No"),
+        "Household income: " + LABELS.income[a.income],
+        "Timeline: " + LABELS.timeline[a.timeline],
+        "Programs shown: " + (programs.length ? programs.map(p => p.name).join("; ") : "None")
+      ].join(" | ");
+      return FUNDING_MAP_FORM_URL + "&" + QUIZ_ANSWERS_FIELD + "=" + encodeURIComponent(summary);
+    }
     const body = [
       "Hi Audrey, I'd like my free Funding Map.", "",
       "Area: " + LABELS.location[a.location],
@@ -334,7 +347,7 @@
     html += `<div class="cta">
       <h3>Get your free Funding Map</h3>
       <p>A one-page summary of the programs you may fit and your next three steps, within 48 hours. My guidance costs you nothing.</p>
-      <a class="btn" href="${fundingMapLink(a, programs)}">Request my Funding Map</a>
+      <a class="btn" href="${fundingMapLink(a, programs)}" target="_blank" rel="noopener">Request my Funding Map</a>
       <a class="btn alt" href="sms:${CONTACT_TEXT}">Text Audrey instead</a>
     </div>`;
 
