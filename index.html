@@ -1,166 +1,341 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maryland Homebuyer Program Finder</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background: #f9f9f9;
-    }
-    h2 {
-      color: #333;
-      text-align: center;
-    }
-    form {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      background-color: #28a745;
-      color: white;
-      font-size: 16px;
-      margin-top: 20px;
-    }
-    .result {
-      max-width: 600px;
-      margin: 30px auto;
-      padding: 20px;
-      background: #e6ffe6;
-      border: 1px solid #b2d8b2;
-      border-radius: 8px;
-    }
-    @media (max-width: 600px) {
-      body {
-        padding: 10px;
-      }
-      form, .result {
-        padding: 15px;
-      }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Keep out of search engines until eXp confirms public use is allowed -->
+<meta name="robots" content="noindex, nofollow">
+<title>Maryland Homebuyer Program Finder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1F3A8A; --amber:#E9A23B; --amber-dk:#A8650F; --teal:#1B8A8A; --teal-dk:#146E6E;
+    --cream:#FAF7F2; --ink:#2B2B2B; --muted:#5A5F66; --line:#E4DED3; --card:#FFFFFF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Source Sans 3',Arial,sans-serif;font-size:17px;line-height:1.5}
+  header{background:var(--navy);color:#fff;padding:28px 20px 32px}
+  .wrap{max-width:760px;margin:0 auto}
+  header .bar{width:64px;height:6px;background:var(--amber);margin-bottom:14px}
+  h1{font-family:'Montserrat',Arial,sans-serif;font-weight:800;font-size:30px;line-height:1.15;margin:0 0 8px}
+  header p{margin:0;color:#DCE3F2;font-size:18px}
+  main{padding:24px 20px 40px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:18px}
+  .q{margin-bottom:20px}
+  .q:last-child{margin-bottom:0}
+  .q label.title{display:block;font-family:'Montserrat',Arial,sans-serif;font-weight:700;color:var(--navy);font-size:17px;margin-bottom:4px}
+  .q .help{color:var(--muted);font-size:15px;margin:0 0 8px}
+  select{width:100%;padding:12px;font-size:17px;font-family:inherit;border:1px solid #C9C2B5;border-radius:10px;background:#fff;color:var(--ink)}
+  select:focus,button:focus,a:focus{outline:3px solid var(--amber);outline-offset:2px}
+  .hidden{display:none}
+  button.primary{width:100%;padding:16px;font-size:18px;font-family:'Montserrat',Arial,sans-serif;font-weight:700;background:var(--amber);color:#2B2B2B;border:0;border-radius:12px;cursor:pointer}
+  button.primary:hover{background:#D9912C}
+  .error{color:#9C0006;font-weight:600;margin-top:10px}
+  #results h2{font-family:'Montserrat',Arial,sans-serif;color:var(--navy);font-size:24px;margin:0 0 6px}
+  .program{border:1px solid var(--line);border-left:6px solid var(--teal);border-radius:12px;padding:16px 18px;margin:14px 0;background:#fff}
+  .program.star{border-left-color:var(--amber)}
+  .program h3{font-family:'Montserrat',Arial,sans-serif;font-size:18px;color:var(--navy);margin:0 0 4px}
+  .amount{font-weight:700;color:var(--amber-dk);margin:0 0 6px}
+  .tag{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--teal-dk);background:#E6F2F2;border-radius:6px;padding:2px 8px;margin-bottom:8px}
+  .program ul{margin:6px 0 8px;padding-left:20px}
+  .program a{color:var(--navy);font-weight:600}
+  .note{background:#FFF7E8;border:1px solid #F1D9A8;border-radius:12px;padding:14px 16px;margin:14px 0;font-size:16px}
+  .cta{background:var(--navy);color:#fff;border-radius:14px;padding:22px;margin-top:20px}
+  .cta h3{font-family:'Montserrat',Arial,sans-serif;margin:0 0 6px;font-size:20px;color:#fff}
+  .cta p{margin:0 0 14px;color:#DCE3F2}
+  .cta a.btn{display:block;text-align:center;background:var(--amber);color:#2B2B2B;text-decoration:none;font-family:'Montserrat',Arial,sans-serif;font-weight:700;padding:14px;border-radius:10px;margin-bottom:10px}
+  .cta a.btn.alt{background:transparent;color:#fff;border:2px solid #fff}
+  footer{border-top:1px solid var(--line);padding:22px 20px 40px;font-size:14px;color:var(--muted)}
+  .lockup{font-family:'Montserrat',Arial,sans-serif;font-weight:800;font-size:17px;line-height:1.3}
+  .lockup .name{color:var(--amber-dk)} .lockup .brk{color:var(--navy)}
+  footer p{margin:6px 0}
+</style>
 </head>
 <body>
-  <h2>Find Your Ideal Homebuyer Program in Maryland</h2>
-  <form id="programForm">
-    <label>Where is the home located?
-      <select id="location">
-        <option value="">Select...</option>
-        <option value="college_park">College Park</option>
-        <option value="laurel">Laurel</option>
-        <option value="pg_county">Prince George's County (not College Park)</option>
-        <option value="other_md">Other Maryland</option>
-      </select>
-    </label>
+<header>
+  <div class="wrap">
+    <div class="bar"></div>
+    <h1>Maryland Homebuyer Program Finder</h1>
+    <p>Answer 7 quick questions to see which down payment and closing cost programs you may qualify for.</p>
+  </div>
+</header>
 
-    <label>Are you a first-time homebuyer?
-      <select id="firstTime">
+<main class="wrap">
+  <form id="quiz" class="card" novalidate>
+    <div class="q">
+      <label class="title" for="location">1. Where do you want to buy?</label>
+      <select id="location" required>
+        <option value="">Select...</option>
+        <option value="pg">Prince George's County (not College Park or Laurel)</option>
+        <option value="cp">City of College Park</option>
+        <option value="laurel">City of Laurel</option>
+        <option value="md">Another Maryland county or city</option>
+        <option value="unsure">Not sure yet</option>
+      </select>
+    </div>
+
+    <div class="q">
+      <label class="title" for="firstTime">2. Have you owned a home in the last 3 years?</label>
+      <p class="help">Most programs define a first-time buyer as someone who hasn't owned a home in the past 3 years.</p>
+      <select id="firstTime" required>
+        <option value="">Select...</option>
+        <option value="yes">No, I haven't (first-time buyer)</option>
+        <option value="no">Yes, I have</option>
+      </select>
+    </div>
+
+    <div class="q">
+      <label class="title" for="occupation">3. Which best describes your work?</label>
+      <select id="occupation" required>
+        <option value="">Select...</option>
+        <option value="pgcps_teacher">Full-time teacher, Prince George's County Public Schools</option>
+        <option value="school_staff">Other public school employee (support staff, administrator, etc.)</option>
+        <option value="nurse">Nurse at a Prince George's County medical facility</option>
+        <option value="public_safety">Full-time public safety (police, fire, sheriff, EMS) in Prince George's County</option>
+        <option value="other">Something else</option>
+      </select>
+    </div>
+
+    <div class="q">
+      <label class="title" for="military">4. Are you active duty military or a veteran?</label>
+      <select id="military" required>
         <option value="">Select...</option>
         <option value="yes">Yes</option>
         <option value="no">No</option>
       </select>
-    </label>
+    </div>
 
-    <label>Are you a teacher or school employee?
-      <select id="teacher">
+    <div class="q">
+      <label class="title" for="disability">5. Do you or a household member have a disability?</label>
+      <select id="disability" required>
         <option value="">Select...</option>
         <option value="yes">Yes</option>
         <option value="no">No</option>
       </select>
-    </label>
+    </div>
 
-    <label>Are you a police officer or sheriff?
-      <select id="police">
+    <div class="q">
+      <label class="title" for="income">6. Roughly, what is your household's yearly income?</label>
+      <p class="help">Income limits depend on household size, so this is only a guide. Your lender confirms the exact limits.</p>
+      <select id="income" required>
         <option value="">Select...</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
+        <option value="under75">Under $75,000</option>
+        <option value="75to125">$75,000 to $125,000</option>
+        <option value="125to175">$125,000 to $175,000</option>
+        <option value="over175">Over $175,000</option>
+        <option value="unsure">I'd rather not say</option>
       </select>
-    </label>
+    </div>
 
-    <label>Are you military (active duty, reserve, or veteran)?
-      <select id="military">
+    <div class="q">
+      <label class="title" for="timeline">7. When would you like to buy?</label>
+      <select id="timeline" required>
         <option value="">Select...</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
+        <option value="0-6">Within 6 months</option>
+        <option value="6-12">In 6 to 12 months</option>
+        <option value="12+">In more than a year</option>
+        <option value="exploring">Just exploring</option>
       </select>
-    </label>
+    </div>
 
-    <label>Do you or a dependent have a disability?
-      <select id="disability">
-        <option value="">Select...</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-      </select>
-    </label>
-
-    <label>Is the home a foreclosure in Laurel?
+    <div class="q hidden" id="foreclosureQ">
+      <label class="title" for="foreclosure">Are you considering a foreclosed home in Laurel?</label>
       <select id="foreclosure">
         <option value="">Select...</option>
         <option value="yes">Yes</option>
-        <option value="no">No</option>
+        <option value="no">No or not sure</option>
       </select>
-    </label>
+    </div>
 
-    <button type="button" onclick="showPrograms()">Find My Programs</button>
+    <button type="submit" class="primary">See programs I may qualify for</button>
+    <p class="error hidden" id="formError" role="alert">Please answer all 7 questions.</p>
   </form>
 
-  <div class="result" id="result"></div>
+  <section id="results" class="card hidden" aria-live="polite"></section>
+</main>
 
-  <script>
-    function showPrograms() {
-      const loc = document.getElementById('location').value;
-      const first = document.getElementById('firstTime').value;
-      const teacher = document.getElementById('teacher').value;
-      const police = document.getElementById('police').value;
-      const military = document.getElementById('military').value;
-      const disability = document.getElementById('disability').value;
-      const foreclosure = document.getElementById('foreclosure').value;
+<footer>
+  <div class="wrap">
+    <div class="lockup"><span class="name">Dr. Audrey Onochie-Nnolim</span><br><span class="brk">eXp Realty</span></div>
+    <p>Licensed Real Estate Referral Agent &middot; Mobile (301) 288-1241 &middot; eXp Realty office (888) 860-7369 &middot; 8115 Maple Lawn Blvd, Fulton, MD 20759</p>
+    <p>This is an educational tool, not a loan offer or a determination of eligibility. Eligibility and funding are decided by participating lenders, the Maryland Department of Housing and Community Development, and Prince George's County. Funds are limited and programs can change. Program details checked <span id="checked"></span>. Equal Housing Opportunity.</p>
+  </div>
+</footer>
 
-      let programs = [];
+<script>
+  // ===== Settings: update these before sharing =====
+  const LAST_CHECKED = "September 30, 2026";
+  const CONTACT_EMAIL = "audrey@valuedrealestate.com";
+  const CONTACT_TEXT = "+13012881241";
+  // Optional: paste a Google Form link to collect Funding Map requests in a sheet; leave "" to use email.
+  const FUNDING_MAP_FORM_URL = "";
 
-      if (loc === "college_park") {
-        programs.push("College Park New Neighbors Grant (up to $15K–$20K)");
-      } else if (loc === "laurel") {
-        if (foreclosure === "yes") {
-          programs.push("Laurel Foreclosed Home Tax Credit");
-        }
-      } else if (loc === "pg_county") {
-        if (first === "yes") programs.push("Pathway to Purchase Program (up to $25K)");
-        programs.push("Prince George's County Purchase Assistance Program (PGCPAP, up to $15K)");
-        if (police === "yes") programs.push("Police & Sheriff Incentive");
-      } else if (loc === "other_md") {
-        if (first === "yes") programs.push("MMP 1st-Time Advantage (up to $6K)");
-        else programs.push("MMP Flex 5000 (up to $5K)");
-      }
+  document.getElementById("checked").textContent = LAST_CHECKED;
 
-      if (teacher === "yes") programs.push("Teacher Next Door Grant (up to $8K + DPA)");
-      if (military === "yes") programs.push("Maryland Homefront (0.25% interest rate reduction)");
-      if (disability === "yes") programs.push("HomeAbility Program (up to $45K assistance)");
+  const LINKS = {
+    criticalWorkforce: "https://www.princegeorgescountymd.gov/departments-offices/housing-community-development/first-time-home-buyers-assistance-programs/critical-workforce-housing-assistance-program",
+    pathway: "https://www.princegeorgescountymd.gov/business/redevelopment-authority/first-time-home-buyer-assistance-programs/pathway-to-purchase",
+    pgPrograms: "https://www.princegeorgescountymd.gov/departments-offices/housing-community-development/first-time-home-buyers-assistance-programs",
+    mmp1st: "https://mmp.maryland.gov/home-loans/mmp-1st-time-advantage",
+    mmpFlex: "https://mmp.maryland.gov/home-loans/mmp-flex-loans",
+    mmpDpa: "https://mmp.maryland.gov/home-loans/down-payment-assistance",
+    mmpFacts: "https://mmp.maryland.gov/resources-lenders/program-fact-sheets-tools",
+    collegePark: "https://www.collegeparkmd.gov/FormCenter/Planning-Community-Development-8/New-Neighbors-Homeownership-Grant-Progra-67",
+    laurelForeclosure: "https://laurelmd.gov/DocumentCenter/View/107",
+    laurelSchool: "https://laurelmd.gov/DocumentCenter/View/3543"
+  };
 
-      document.getElementById('result').innerHTML =
-        programs.length > 0
-          ? `<strong>Recommended Programs:</strong><ul><li>${programs.join('</li><li>')}</li></ul>`
-          : 'No matching programs found. Please review your inputs.';
+  const LABELS = {
+    location: {pg:"Prince George's County", cp:"College Park", laurel:"Laurel", md:"Another Maryland area", unsure:"Not sure yet"},
+    occupation: {pgcps_teacher:"PGCPS full-time teacher", school_staff:"Other public school employee", nurse:"Nurse at a PG County facility", public_safety:"PG County public safety", other:"Other"},
+    income: {under75:"Under $75,000", "75to125":"$75,000 to $125,000", "125to175":"$125,000 to $175,000", over175:"Over $175,000", unsure:"Not shared"},
+    timeline: {"0-6":"Within 6 months", "6-12":"6 to 12 months", "12+":"More than a year", exploring:"Just exploring"}
+  };
+
+  const locSel = document.getElementById("location");
+  locSel.addEventListener("change", () => {
+    document.getElementById("foreclosureQ").classList.toggle("hidden", locSel.value !== "laurel");
+  });
+
+  function esc(s){ return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+  function programCard(p){
+    const bullets = p.points.map(x => `<li>${x}</li>`).join("");
+    return `<div class="program${p.star ? " star" : ""}">
+      <span class="tag">${esc(p.type)}</span>
+      <h3>${esc(p.name)}</h3>
+      <p class="amount">${esc(p.amount)}</p>
+      <ul>${bullets}</ul>
+      <a href="${p.link}" target="_blank" rel="noopener">Official program details</a>
+    </div>`;
+  }
+
+  function findPrograms(a){
+    const inPG = ["pg","cp","laurel"].includes(a.location);
+    const first = a.firstTime === "yes";
+    const cwOccupation = ["pgcps_teacher","nurse","public_safety"].includes(a.occupation);
+    const highIncome = a.income === "over175";
+    const list = [];
+
+    if (inPG && first && cwOccupation) {
+      list.push({star:true, type:"Forgivable loan", name:"Critical Workforce Housing Assistance Program (Prince George's County)",
+        amount:"Up to $50,000, or 25% of the price, whichever is less",
+        points:["For first-time buyers who are full-time PGCPS teachers, nurses at PG County facilities, or full-time PG County public safety staff",
+                "0% loan forgiven 10% per year over 10 years while you live in the home",
+                "Household income up to 120% of area median income; 8-hour homebuyer class required",
+                highIncome ? "Your income may be near the limit; a lender can confirm" : "A county-approved lender applies for you"],
+        link:LINKS.criticalWorkforce});
     }
-  </script>
+    if (inPG && first) {
+      list.push({star:!cwOccupation, type:"Deferred loan", name:"Pathway to Purchase (Prince George's County)",
+        amount:"Up to $50,000",
+        points:["For first-time buyers anywhere in Prince George's County",
+                "0% deferred loan, repaid when you sell, refinance, or move out (not forgiven)",
+                "Pairs with a Maryland Mortgage Program loan; 8-hour homebuyer class required",
+                "Funded first come, first ready"],
+        link:LINKS.pathway});
+    }
+    if ((inPG || a.location === "md" || a.location === "unsure") && first) {
+      list.push({type:"Deferred loan", name:"Maryland Mortgage Program: 1st Time Advantage",
+        amount:"$6,000, or 3%, 4%, or 5% of your first mortgage, depending on the product",
+        points:["Low fixed-rate state mortgage for first-time buyers, with a 0% deferred down payment loan",
+                "The assistance loan is due when the first mortgage ends (payoff, refinance, transfer, or sale)",
+                "Income, credit, and purchase price limits apply; homebuyer education required"],
+        link:LINKS.mmp1st});
+    }
+    if ((inPG || a.location === "md" || a.location === "unsure") && !first) {
+      list.push({type:"Deferred loan", name:"Maryland Mortgage Program: Flex 6000",
+        amount:"$6,000 for down payment and closing costs",
+        points:["Open to repeat buyers who don't own other property at closing",
+                "0% deferred loan, due when the first mortgage ends",
+                a.military === "yes" ? "Veterans: ask your lender whether the first-time buyer rule is waived for you, which could open more options" : "Homebuyer education required"],
+        link:LINKS.mmpFlex});
+    }
+    if (a.disability === "yes" && first) {
+      list.push({type:"Deferred loan", name:"Maryland Mortgage Program: HomeAbility",
+        amount:"Up to 25% of the price, capped at $45,000",
+        points:["For first-time buyers with a disability, or households with a member who has one",
+                "Household income must be below 80% of area median income",
+                "0% deferred second loan"],
+        link:LINKS.mmpFacts});
+    }
+    if (a.location === "cp") {
+      list.push({type:"Grant", name:"College Park New Neighbors Homeownership Grant",
+        amount:"$5,000 to $20,000, depending on eligibility",
+        points:["Amount depends on who you are (for example, residents, students, police, first responders) and the home you buy",
+                "Must live in the home; part may be repaid if you sell or move out within 5 years",
+                "First come, first served; the grant may be taxable"],
+        link:LINKS.collegePark});
+    }
+    if (a.location === "laurel" && ["pgcps_teacher","school_staff"].includes(a.occupation)) {
+      list.push({type:"Tax credit", name:"City of Laurel Public School Employee Tax Credit",
+        amount:"20% of your city property tax, up to $2,500 a year",
+        points:["For public school employees who own and live in their home in Laurel","Eligibility conditions apply; first come, first served"],
+        link:LINKS.laurelSchool});
+    }
+    if (a.location === "laurel" && a.foreclosure === "yes") {
+      list.push({type:"Tax credit", name:"City of Laurel Foreclosed Home Tax Credit",
+        amount:"Up to $3,500 a year of city property tax, for 5 to 6 years (declining)",
+        points:["For owner-occupants who buy a foreclosed home in Laurel","Limited annual budget; first come, first served"],
+        link:LINKS.laurelForeclosure});
+    }
+    return list;
+  }
+
+  function fundingMapLink(a, programs){
+    if (FUNDING_MAP_FORM_URL) return FUNDING_MAP_FORM_URL;
+    const body = [
+      "Hi Audrey, I'd like my free Funding Map.", "",
+      "Area: " + LABELS.location[a.location],
+      "First-time buyer: " + (a.firstTime === "yes" ? "Yes" : "No"),
+      "Work: " + LABELS.occupation[a.occupation],
+      "Military/veteran: " + (a.military === "yes" ? "Yes" : "No"),
+      "Household income: " + LABELS.income[a.income],
+      "Timeline: " + LABELS.timeline[a.timeline],
+      "Programs shown: " + (programs.length ? programs.map(p => p.name).join("; ") : "None"), "",
+      "My name:", "Best phone:", "",
+      "I agree to be contacted by Dr. Audrey Onochie-Nnolim, eXp Realty, about homebuying."
+    ].join("\n");
+    return "mailto:" + CONTACT_EMAIL + "?subject=" + encodeURIComponent("Funding Map request") + "&body=" + encodeURIComponent(body);
+  }
+
+  document.getElementById("quiz").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const ids = ["location","firstTime","occupation","military","disability","income","timeline"];
+    const a = {};
+    ids.forEach(id => a[id] = document.getElementById(id).value);
+    a.foreclosure = document.getElementById("foreclosure").value;
+    const err = document.getElementById("formError");
+    if (ids.some(id => !a[id])) { err.classList.remove("hidden"); return; }
+    err.classList.add("hidden");
+
+    const programs = findPrograms(a);
+    let html = `<h2>Programs you may qualify for</h2>
+      <p>Based on your answers. A participating lender makes the final call on eligibility and amounts.</p>`;
+    html += programs.length ? programs.map(programCard).join("")
+      : `<div class="note">No programs matched these answers, but options change often. A Funding Map review can still find a path, including programs for repeat buyers and lender options.</div>`;
+
+    if (programs.some(p => /Maryland Mortgage Program: (1st Time Advantage|Flex)/.test(p.name))) {
+      html += `<div class="note"><strong>Stacking tip:</strong> with the 1st Time Advantage 6000 or Flex 6000 loan, Maryland can match up to $2,500 of assistance you receive from an approved partner organization. <a href="${LINKS.mmpDpa}" target="_blank" rel="noopener">How Partner Match works</a></div>`;
+    }
+    if (a.location === "unsure") {
+      html += `<div class="note">Buying in Prince George's County opens county programs worth up to $50,000 for eligible first-time buyers. <a href="${LINKS.pgPrograms}" target="_blank" rel="noopener">See all county programs</a></div>`;
+    }
+    html += `<div class="note"><strong>Next steps for almost every program:</strong> an 8-hour homebuyer education class from a HUD-approved counseling agency, and pre-approval from a program-approved lender.</div>`;
+
+    html += `<div class="cta">
+      <h3>Get your free Funding Map</h3>
+      <p>A one-page summary of the programs you may fit and your next three steps, within 48 hours. My guidance costs you nothing.</p>
+      <a class="btn" href="${fundingMapLink(a, programs)}">Request my Funding Map</a>
+      <a class="btn alt" href="sms:${CONTACT_TEXT}">Text Audrey instead</a>
+    </div>`;
+
+    const res = document.getElementById("results");
+    res.innerHTML = html;
+    res.classList.remove("hidden");
+    res.scrollIntoView({behavior:"smooth", block:"start"});
+  });
+</script>
 </body>
 </html>
