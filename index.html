@@ -257,7 +257,8 @@
         amount:"Up to 25% of the price, capped at $45,000",
         points:["For first-time buyers with a disability, or households with a member who has one",
                 "Household income must be below 80% of area median income",
-                "0% deferred second loan"],
+                "0% deferred second loan",
+                ...(["75to125","125to175","over175"].includes(a.income) ? ["Your income may be above this program's limit; a lender can confirm"] : [])],
         link:LINKS.mmpFacts});
     }
     if (a.location === "cp") {
@@ -316,6 +317,12 @@
     html += programs.length ? programs.map(programCard).join("")
       : `<div class="note">No programs matched these answers, but options change often. A Funding Map review can still find a path, including programs for repeat buyers and lender options.</div>`;
 
+    if (programs.length > 1) {
+      html += `<div class="note"><strong>Important:</strong> programs can't always be combined, so these amounts may not add together. Your lender confirms which programs work together for you.</div>`;
+    }
+    if (a.timeline === "12+" || a.timeline === "exploring") {
+      html += `<div class="note"><strong>Buying in a year or more?</strong> Use the time well: take the 8-hour homebuyer class, check your credit, and save for closing costs. Programs and funding change, so check again before you buy.</div>`;
+    }
     if (programs.some(p => /Maryland Mortgage Program: (1st Time Advantage|Flex)/.test(p.name))) {
       html += `<div class="note"><strong>Stacking tip:</strong> with the 1st Time Advantage 6000 or Flex 6000 loan, Maryland can match up to $2,500 of assistance you receive from an approved partner organization. <a href="${LINKS.mmpDpa}" target="_blank" rel="noopener">How Partner Match works</a></div>`;
     }
